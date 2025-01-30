@@ -45,8 +45,8 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
             .append("image")
             .attr("class", "bubble")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 20)) // Ajuste para celular
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 20)) // Ajuste para celular
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 100)) // Ajuste para celular
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 100)) // Ajuste para celular
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
                 gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
@@ -119,10 +119,10 @@ const GrammyBubbles = () => {
                         transition={{ duration: 0.2 }}
                     >
                         <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
-                        <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average}%</div>
-                        <div className="font-mono text-[12px]">Predição: {tooltipData.prediction}%</div>
-                        <div className="font-mono text-[12px]">Mercado: {tooltipData.market}%</div>
-                        <div className="font-mono text-[12px]">Críticos: {tooltipData.critics}%</div>
+                        <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average} %</div> 
+                        <div className="font-mono text-[12px]">Predição: {tooltipData.prediction} %</div>
+                        <div className="font-mono text-[12px]">Mercado: {tooltipData.market} %</div>
+                        <div className="font-mono text-[12px]">Críticos: {tooltipData.critics} %</div>
                     </motion.div>
                 )}
             </AnimatePresence>

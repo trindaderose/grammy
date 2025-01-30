@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import GrammyBubbles from "@/components/GrammyBubbles";
-import GrammyPredictions from "@/components/GrammyPredictions";
+import GrammyResearch from "@/components/Research";
 
 export default function Home() {
   return (
-    <>
-      {/* <GrammyPredictions /> */}
+    <div className="">
+      {/* <GrammyResearch /> */}
       <GrammyBubbles />
-    </>
+    </div>
   );
 }
