@@ -70,9 +70,9 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
     }, [category]);
 
     return (
-        <div className="relative h-full w-full bg-black">
+        <div className="relative h-full w-full ">
             <h3 className="text-sm font-bold font-mono p-4">{title}</h3>
-            <svg ref={svgRef} className="bg-black font-mono absolute top-0 left-0"></svg>
+            <svg ref={svgRef} className="font-mono absolute top-0 left-0"></svg>
         </div>
     );
 };
@@ -95,7 +95,7 @@ const GrammyBubbles = () => {
     };
 
     return (
-        <div className="flex flex-col text-black h-full">
+        <div className="flex flex-col h-full">
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
@@ -105,7 +105,7 @@ const GrammyBubbles = () => {
             />
             {tooltipData && (
                 <div
-                    className="absolute"
+                    className="absolute z-20"
                     style={{
                         left: tooltipPosition.x,
                         top: tooltipPosition.y,
@@ -123,12 +123,12 @@ const GrammyBubbles = () => {
                     <div className="font-mono text-[12px]">Críticos: {tooltipData.critics}%</div>
                 </div>
             )}
-            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 bg-black z-10">
+            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center">
                 {categories.map(cat => (
                     <Button
+                        variant={"reverse"}
                         key={cat.key}
-                        className="text-sm px-4 py-2 rounded"
-                        variant="outline"
+                        className="text-[12px] font-mono px-4 py-2 rounded text-white"
                         onClick={() => setSelectedCategory(cat.key)}
                     >
                         {cat.title}
