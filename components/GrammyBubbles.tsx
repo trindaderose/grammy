@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 'use client';
 import { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
@@ -34,9 +34,9 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
 
         simulationRef.current?.stop();
         simulationRef.current = d3.forceSimulation(nodes)
-            .force("charge", d3.forceManyBody().strength(2))
+            .force("charge", d3.forceManyBody().strength(10))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * 3))
+            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * 2))
             .on("tick", ticked);
 
         const bubbles = svg.selectAll(".bubble")
@@ -45,8 +45,8 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
             .append("image")
             .attr("class", "bubble")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 4 : 6), 40)) // Ajuste para celular
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 4 : 6), 40)) // Ajuste para celular
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 20)) // Ajuste para celular
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 20)) // Ajuste para celular
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
                 gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
@@ -131,7 +131,7 @@ const GrammyBubbles = () => {
                     <Button
                         variant={"reverse"}
                         key={cat.key}
-                        className="text-[12px] font-mono px-4 py-2 rounded text-white"
+                        className="text-[12px] font-mono px-4 py-2 m-1 rounded text-white"
                         onClick={() => setSelectedCategory(cat.key)}
                     >
                         {cat.title}
