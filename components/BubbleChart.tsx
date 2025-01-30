@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
@@ -16,9 +15,11 @@ interface BubbleChartProps {
 
 const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove }: BubbleChartProps) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
+    const [zoomTransform, setZoomTransform] = useState(d3.zoomIdentity);
 
     useEffect(() => {
         if (!svgRef.current) return;
+
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
@@ -27,27 +28,32 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
 
         svg.attr("width", width).attr("height", height);
 
+        // Zoom and pan setup
+        const zoom = d3.zoom().scaleExtent([0.5, 5]).on("zoom", (event) => {
+            setZoomTransform(event.transform);
+        });
+        svg.call(zoom);
+
         const simulation = d3.forceSimulation<PredictionNode>(category)
-            .force("charge", d3.forceManyBody().strength(5))
+            .force("charge", d3.forceManyBody().strength(3))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * 3.5))
+            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * 3))
             .on("tick", ticked);
 
-        const colorScale = d3.scaleSequential(d3.interpolatePlasma).domain([0, category.length]);
+        const colorScale = d3.scaleOrdinal(d3.schemeSet3);
 
         const nodes = svg.selectAll(".bubble")
             .data(category)
             .enter()
             .append("circle")
             .attr("class", "bubble")
-            .attr("r", (d: PredictionNode) => Math.max(d.overall_average * 5, 20))
-            .attr("fill", (d: PredictionNode, i: number) => colorScale(i))
+            .attr("r", (d: PredictionNode) => d.overall_average * 5)
+            .attr("fill", (d: PredictionNode, i: number) => colorScale(i.toString()))
             .attr("cx", (d: PredictionNode) => d.x ?? 0)
             .attr("cy", (d: PredictionNode) => d.y ?? 0)
             .style("opacity", 1)
-            .style("transition", "all 0.2s ease") 
             .on("mouseover", (event, d) => {
-                gsap.to(event.target, { scale: 1, duration: 0.2 });
+                gsap.to(event.target, { scale: 1.2, duration: 0.2 });
                 onMouseEnter(d);
             })
             .on("mouseleave", (event) => {
@@ -66,23 +72,25 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
             .append("text")
             .attr("class", "label")
             .attr("text-anchor", "middle")
-            .attr("fill", "white")
-            .style("font-size", "10px") // Slightly larger font size for better readability
+            .attr("fill", "black")
+            .style("font-size", "10px")
             .style("pointer-events", "none")
             .text((d: PredictionNode) => d.name);
 
         function ticked() {
-            nodes.attr("cx", (d: PredictionNode) => d.x ?? 0)
-                .attr("cy", (d: PredictionNode) => d.y ?? 0);
-            labels.attr("x", (d: PredictionNode) => d.x ?? 0)
-                .attr("y", (d: PredictionNode) => d.y ?? 0);
+            nodes.transition().duration(500).attr("cx", (d: PredictionNode) => d.x ?? 0).attr("cy", (d: PredictionNode) => d.y ?? 0);
+            labels.transition().duration(500).attr("x", (d: PredictionNode) => d.x ?? 0).attr("y", (d: PredictionNode) => d.y ?? 0);
         }
     }, [category, onMouseEnter, onMouseLeave, onMouseMove]);
 
     return (
         <div className="relative h-full w-full">
-            <h3 className="text-sm font-bold font-mono p-4">{title}</h3>
-            <svg ref={svgRef} className="font-mono absolute top-0 left-0"></svg>
+            <h3 className="text-sm font-bold p-4">{title}</h3>
+            <svg
+                ref={svgRef}
+                className="absolute top-0 left-0"
+                style={{ transform: zoomTransform.toString() }}
+            ></svg>
         </div>
     );
 };
@@ -101,9 +109,7 @@ const GrammyBubbles = () => {
     };
 
     const handleMouseMove = (event: React.MouseEvent | MouseEvent) => {
-        if (event instanceof MouseEvent) {
-            setTooltipPosition({ x: event.clientX + 10, y: event.clientY + 10 });
-        }
+        setTooltipPosition({ x: event.clientX + 10, y: event.clientY + 10 });
     };
 
     const handleCategoryClick = (categoryKey: string) => {
@@ -111,7 +117,19 @@ const GrammyBubbles = () => {
     };
 
     return (
-        <div className="flex flex-col text-black h-full">
+        <div className="h-screen w-screen flex flex-col text-black">
+            <div className="flex space-x-4 p-4">
+                {categories.map((cat) => (
+                    <Button
+                        key={cat.key}
+                        className="text-sm px-4 py-2 rounded"
+                        variant={"outline"}
+                        onClick={() => handleCategoryClick(cat.key)}
+                    >
+                        {cat.title}
+                    </Button>
+                ))}
+            </div>
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find((cat) => cat.key === selectedCategory)?.title || ""}
@@ -126,32 +144,17 @@ const GrammyBubbles = () => {
                         left: tooltipPosition.x,
                         top: tooltipPosition.y,
                         backgroundColor: "white",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: "1px solid rgba(0, 0, 0, 0.1)",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                        transition: "opacity 0.2s ease",
+                        padding: "5px",
+                        borderRadius: "5px",
+                        border: "1px solid black",
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                     }}
                 >
-                    <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
+                    <div className="font-bold text-sm">{tooltipData.name}</div>
                     <div className="font-bold text-sm">Média Geral: {tooltipData.overall_average}%</div>
                     <div className="font-bold text-sm">Predição: {tooltipData.prediction}%</div>
-                    <div className="font-bold text-sm">Mercado: {tooltipData.market}%</div>
-                    <div className="font-bold text-sm">Críticos: {tooltipData.critics}%</div>
                 </div>
             )}
-            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 bg-white z-10">
-                {categories.map((cat) => (
-                    <Button
-                        key={cat.key}
-                        className="text-sm px-4 py-2 rounded"
-                        variant={"outline"}
-                        onClick={() => handleCategoryClick(cat.key)}
-                    >
-                        {cat.title}
-                    </Button>
-                ))}
-            </div>
         </div>
     );
 };
