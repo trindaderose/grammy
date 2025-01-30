@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import gsap from "gsap";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { categories, data, PredictionNode } from "../data/data";
 
@@ -44,36 +45,32 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
             .append("image")
             .attr("class", "bubble")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * 6, 40))
-            .attr("height", d => Math.max(d.overall_average * 6, 40))
-            .style("opacity", 1)
-            .on("mouseover", (event, d) => onMouseEnter(d))
-            .on("mouseleave", () => onMouseLeave())
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 4 : 6), 40)) // Ajuste para celular
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 4 : 6), 40)) // Ajuste para celular
+            .style("opacity", 0)
+            .on("mouseover", (event, d) => {
+                gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
+                onMouseEnter(d);
+            })
+            .on("mouseleave", (event) => {
+                gsap.to(event.currentTarget, { scale: 1, opacity: 1, duration: 0.3 });
+                onMouseLeave();
+            })
             .on("mousemove", (event) => onMouseMove(event));
 
-        const labels = svg.selectAll(".label")
-            .data(nodes)
-            .enter()
-            .append("text")
-            .attr("class", "label")
-            .attr("text-anchor", "middle")
-            .attr("fill", "white")
-            .style("font-size", "10px")
-            .style("pointer-events", "none")
-            .text(d => String(d.name));
+        gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05 });
 
         function ticked() {
             bubbles.attr("x", d => (d.x ?? 0) - Math.max(d.overall_average * 3, 20))
                 .attr("y", d => (d.y ?? 0) - Math.max(d.overall_average * 3, 20));
-            labels.attr("x", d => d.x ?? 0).attr("y", d => d.y ?? 0);
         }
     }, [category]);
 
     return (
-        <div className="relative h-full w-full ">
-            <h3 className="text-sm font-bold font-mono p-4">{title}</h3>
+        <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <h3 className="text-sm font-bold font-mono p-4 text-white">{title}</h3>
             <svg ref={svgRef} className="font-mono absolute top-0 left-0"></svg>
-        </div>
+        </motion.div>
     );
 };
 
@@ -95,7 +92,7 @@ const GrammyBubbles = () => {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <motion.div className="flex flex-col h-full bg-black" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
@@ -103,27 +100,33 @@ const GrammyBubbles = () => {
                 onMouseLeave={handleMouseLeave}
                 onMouseMove={handleMouseMove}
             />
-            {tooltipData && (
-                <div
-                    className="absolute z-20"
-                    style={{
-                        left: tooltipPosition.x,
-                        top: tooltipPosition.y,
-                        backgroundColor: "white",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: "1px solid rgba(0, 0, 0, 0.1)",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    }}
-                >
-                    <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
-                    <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average}%</div>
-                    <div className="font-mono text-[12px]">Predição: {tooltipData.prediction}%</div>
-                    <div className="font-mono text-[12px]">Mercado: {tooltipData.market}%</div>
-                    <div className="font-mono text-[12px]">Críticos: {tooltipData.critics}%</div>
-                </div>
-            )}
-            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center">
+            <AnimatePresence>
+                {tooltipData && (
+                    <motion.div
+                        className="absolute z-20"
+                        style={{
+                            left: tooltipPosition.x,
+                            top: tooltipPosition.y,
+                            backgroundColor: "white",
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid rgba(0, 0, 0, 0.1)",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
+                        <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average}%</div>
+                        <div className="font-mono text-[12px]">Predição: {tooltipData.prediction}%</div>
+                        <div className="font-mono text-[12px]">Mercado: {tooltipData.market}%</div>
+                        <div className="font-mono text-[12px]">Críticos: {tooltipData.critics}%</div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center flex-wrap">
                 {categories.map(cat => (
                     <Button
                         variant={"reverse"}
@@ -135,7 +138,7 @@ const GrammyBubbles = () => {
                     </Button>
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
