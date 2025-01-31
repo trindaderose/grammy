@@ -129,9 +129,9 @@ const GrammyBubbles = () => {
             <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center flex-wrap">
                 {categories.map(cat => (
                     <Button
-                        variant={"reverse"}
+                        variant={"neutral"}
                         key={cat.key}
-                        className="text-[12px] font-mono px-4 py-2 m-1 rounded text-white"
+                        className="text-[12px] font-mono px-4 py-2 m-1 rounded"
                         onClick={() => setSelectedCategory(cat.key)}
                     >
                         {cat.title}
