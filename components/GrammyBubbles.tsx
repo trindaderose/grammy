@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { categories, data, PredictionNode } from "../data/data";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 
 interface BubbleChartProps {
     category: PredictionNode[];
@@ -14,9 +15,10 @@ interface BubbleChartProps {
     onMouseEnter: (data: PredictionNode) => void;
     onMouseLeave: () => void;
     onMouseMove: (event: React.MouseEvent | MouseEvent) => void;
+    onClick: (data: PredictionNode) => void;
 }
 
-const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove }: BubbleChartProps) => {
+const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove, onClick }: BubbleChartProps) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const simulationRef = useRef<d3.Simulation<PredictionNode, undefined> | null>(null);
 
@@ -56,7 +58,8 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove 
                 gsap.to(event.currentTarget, { scale: 1, opacity: 1, duration: 0.3 });
                 onMouseLeave();
             })
-            .on("mousemove", (event) => onMouseMove(event));
+            .on("mousemove", (event) => onMouseMove(event))
+            .on("click", (event, d) => onClick(d));
 
         gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05 });
 
@@ -78,6 +81,25 @@ const GrammyBubbles = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("album");
     const [tooltipData, setTooltipData] = useState<PredictionNode | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [selectedData, setSelectedData] = useState<PredictionNode | null>(null);
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        // Check if the screen width is greater than 768px (desktop)
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth > 768);
+        };
+
+        // Set initial value
+        handleResize();
+
+        // Add event listener for window resize
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup event listener
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const handleMouseEnter = (data: PredictionNode) => {
         if (tooltipData?.name !== data.name) {
@@ -90,6 +112,10 @@ const GrammyBubbles = () => {
             setTooltipPosition({ x: event.clientX + 10, y: event.clientY + 10 });
         }
     };
+    const handleClick = (data: PredictionNode) => {
+        setSelectedData(data);
+        setIsDrawerOpen(true);
+    };
 
     return (
         <motion.div className="flex flex-col h-full bg-black" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -99,33 +125,37 @@ const GrammyBubbles = () => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onMouseMove={handleMouseMove}
+                onClick={handleClick}
             />
-            <AnimatePresence>
-                {tooltipData && (
-                    <motion.div
-                        className="absolute z-20"
-                        style={{
-                            left: tooltipPosition.x,
-                            top: tooltipPosition.y,
-                            backgroundColor: "white",
-                            padding: "10px",
-                            borderRadius: "8px",
-                            border: "1px solid rgba(0, 0, 0, 0.1)",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                        }}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
-                        <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average} %</div> 
-                        <div className="font-mono text-[12px]">Predição: {tooltipData.prediction} %</div>
-                        <div className="font-mono text-[12px]">Mercado: {tooltipData.market} %</div>
-                        <div className="font-mono text-[12px]">Críticos: {tooltipData.critics} %</div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Only render the tooltip if it's a desktop device */}
+            {isDesktop && (
+                <AnimatePresence>
+                    {tooltipData && (
+                        <motion.div
+                            className="absolute z-20"
+                            style={{
+                                left: tooltipPosition.x,
+                                top: tooltipPosition.y,
+                                backgroundColor: "white",
+                                padding: "10px",
+                                borderRadius: "8px",
+                                border: "1px solid rgba(0, 0, 0, 0.1)",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            }}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
+                            <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average} %</div>
+                            <div className="font-mono text-[12px]">Predição: {tooltipData.prediction} %</div>
+                            <div className="font-mono text-[12px]">Mercado: {tooltipData.market} %</div>
+                            <div className="font-mono text-[12px]">Críticos: {tooltipData.critics} %</div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            )}
             <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center flex-wrap">
                 {categories.map(cat => (
                     <Button
@@ -138,6 +168,21 @@ const GrammyBubbles = () => {
                     </Button>
                 ))}
             </div>
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle>{selectedData?.name}</DrawerTitle>
+                        <DrawerDescription>Detailed Information</DrawerDescription>
+                    </DrawerHeader>
+                    <div className="p-4">
+                        <div className="font-bold font-mono text-lg">{selectedData?.name}</div>
+                        <div className="font-bold font-mono text-[12px]">Média Geral: {selectedData?.overall_average} %</div>
+                        <div className="font-mono text-[12px]">Predição: {selectedData?.prediction} %</div>
+                        <div className="font-mono text-[12px]">Mercado: {selectedData?.market} %</div>
+                        <div className="font-mono text-[12px]">Críticos: {selectedData?.critics} %</div>
+                    </div>
+                </DrawerContent>
+            </Drawer>
         </motion.div>
     );
 };
