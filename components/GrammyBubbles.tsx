@@ -71,7 +71,7 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
 
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h3 className="text-sm font-bold font-mono p-4 text-white">{title}</h3>
+            <h3 className="text-sm font-bold font-mono p-4 text-[#e0d1e8]">{title}</h3>
             <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden"></svg>        </motion.div>
     );
 };
@@ -140,12 +140,12 @@ const GrammyBubbles = () => {
                             style={{
                                 left: tooltipPosition.x,
                                 top: tooltipPosition.y,
-                                backgroundColor: "white",
+                                backgroundColor: "#e0d1e8",
                                 padding: "10px",
                                 borderRadius: "8px",
                                 border: "1px solid rgba(0, 0, 0, 0.1)",
                                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                                transform: "translate(-50%, -50%)", // Center the tooltip
+                                transform: "translate(-50%, -50%)", 
                             }}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}

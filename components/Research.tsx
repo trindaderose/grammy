@@ -15,8 +15,8 @@ interface ResearchSectionProps {
 const ResearchSection = ({ title, content, link, asideImage, asideText, tableData }: ResearchSectionProps) => {
     return (
         <motion.div className="my-8 bg-[#150317]">
-            <h2 className="text-5xl font-bold text-white mb-4 pt-10 max-w-screen-md">{title}</h2>
-            <p className="text-sm text-gray-300 max-w-screen-sm mb-4">{content}</p>
+            <h2 className="text-5xl font-bold text-[#efb9f0] mb-4 pt-10 max-w-screen-md">{title}</h2>
+            <p className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4">{content}</p>
 
             {link && (
                 <a href={link} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
@@ -27,7 +27,7 @@ const ResearchSection = ({ title, content, link, asideImage, asideText, tableDat
             {asideImage && asideText && (
                 <aside className="flex items-center space-x-2 bg-gray-800 p-4 rounded-md mt-6">
                     {/* <img src={asideImage} alt="icon" width="40px" /> */}
-                    <p className="text-sm font-mono text-gray-400">{asideText}</p>
+                    <p className="text-sm font-mono text-[#e0d1e8]">{asideText}</p>
                 </aside>
             )}
 
