@@ -103,7 +103,7 @@ const BubbleChart = ({
 
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="flex flex-col items-start px-4">
+            <div className="flex flex-col items-start ">
                 <h3 className="text-sm font-bold font-mono px-4 text-[#efb9f0]">{title}</h3>
                 <div className="flex flex-wrap items-left justify-start mt-auto px-2" style={{ zIndex: 2 }}>
                     {categories.map(cat => (
@@ -200,7 +200,7 @@ const GrammyBubbles = () => {
     };
 
     return (
-        <motion.div className="flex flex-col h-full w-full px-4 bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="flex flex-col h-full w-full bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}

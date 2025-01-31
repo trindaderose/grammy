@@ -16,7 +16,7 @@ const ResearchSection = ({ title, content, link, asideImage, asideText, tableDat
     return (
         <motion.div className="my-8 bg-[#150317]">
             <h2 className="text-4xl lg:text-5xl font-bold text-[#efb9f0] mb-4 px-4 pt-10 max-w-screen-md">{title}</h2>
-            <div className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4 px-4">
+            <div className="text-sm text-[#e0d1e8] max-w-screen-lg mb-4 px-4">
                 {content.map((paragraph, index) => (
                     <p key={index} className="mb-4">{paragraph}</p>
                 ))}
@@ -63,7 +63,7 @@ const ResearchSection = ({ title, content, link, asideImage, asideText, tableDat
 
 const GrammyResearch = () => {
     return (
-        <motion.div className="h-full p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ResearchSection
                 title="Quais são as previsões para o Grammy Awards 2025?"
                 content={[
