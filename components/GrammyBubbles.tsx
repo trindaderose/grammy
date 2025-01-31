@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 'use client';
@@ -45,13 +46,13 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
             .data(nodes)
             .enter()
             .append("image")
-            .attr("class", "bubble")
+            .attr("class", "bubble cursor-pointer")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100)) // Ajuste para celular
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100)) // Ajuste para celular
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100))
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100))
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
-                gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
+                gsap.to(event.currentTarget, { scale: 1, opacity: 1, duration: 0.3 });
                 onMouseEnter(d);
             })
             .on("mouseleave", (event) => {
@@ -61,7 +62,7 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
             .on("mousemove", (event) => onMouseMove(event))
             .on("click", (event, d) => onClick(d));
 
-        gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05 });
+        gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 0.8, stagger: 0.05 });
 
         function ticked() {
             bubbles.attr("x", d => (d.x ?? 0) - Math.max(d.overall_average * 3, 20))
@@ -72,7 +73,69 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <h3 className="text-sm font-bold font-mono p-4 text-[#e0d1e8]">{title}</h3>
-            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden"></svg>        </motion.div>
+            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden"></svg>
+        </motion.div>
+    );
+};
+
+const FloatingHint = () => {
+    const [visible, setVisible] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setVisible(false);
+        }, 5000); // Hide after 5 seconds
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <AnimatePresence>
+            {visible && (
+                <motion.div
+                    className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-[#e0d1e8] text-[#150317] px-4 py-2 rounded-lg shadow-lg text-sm font-mono"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Clique na imagem para mais detalhes
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
+const Legend = () => {
+    return (
+        <div className="p-4 bg-[#1e0a2a] rounded-lg shadow-md m-5">
+            <h4 className="font-bold font-mono text-sm text-[#e0d1e8] mb-4">Legenda</h4>
+            <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-[#e2ff8e] rounded-full"></div>
+                    <p className="text-[12px] text-[#e0d1e8]">
+                        <strong>Média Geral:</strong> Calculada a partir de três fontes principais: Análise Preditiva, Apostas do Público e Apostas da Crítica.
+                    </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-[#ffffff] rounded-full"></div>
+                    <p className="text-[12px] text-[#e0d1e8]">
+                        <strong>Análise Preditiva:</strong> Usa modelos estatísticos e tendências históricas para prever vencedores do Grammy Awards.
+                    </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-[#ffaab9] rounded-full"></div>
+                    <p className="text-[12px] text-[#e0d1e8]">
+                        <strong>Apostas do Mercado:</strong> Coletadas via Kalshi. Os preços dos contratos refletem a percepção coletiva sobre os favoritos. Dados coletados em 29/01.
+                    </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-[#d03200] rounded-full"></div>
+                    <p className="text-[12px] text-[#e0d1e8]">
+                        <strong>Apostas da Crítica:</strong> Baseadas na análise de Billboard, The Guardian, Vulture, AP News e Pitchfork, com pesos atribuídos por especialização, influência, profundidade e popularidade.
+                    </p>
+                </div>
+            </div>
+        </div>
     );
 };
 
@@ -85,18 +148,11 @@ const GrammyBubbles = () => {
     const [isDesktop, setIsDesktop] = useState(false);
 
     useEffect(() => {
-        // Check if the screen width is greater than 768px (desktop)
         const handleResize = () => {
             setIsDesktop(window.innerWidth > 768);
         };
-
-        // Set initial value
         handleResize();
-
-        // Add event listener for window resize
         window.addEventListener("resize", handleResize);
-
-        // Cleanup event listener
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
@@ -112,7 +168,7 @@ const GrammyBubbles = () => {
             const rect = target.getBoundingClientRect();
             setTooltipPosition({
                 x: rect.left + window.scrollX + rect.width / 2,
-                y: rect.top + window.scrollY + rect.height / 2
+                y: rect.top + window.scrollY + rect.height / 2,
             });
         }
     };
@@ -123,6 +179,7 @@ const GrammyBubbles = () => {
 
     return (
         <motion.div className="flex flex-col h-full w-full bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            {/* <FloatingHint /> */}
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
@@ -131,7 +188,6 @@ const GrammyBubbles = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleClick}
             />
-            {/* Only render the tooltip if it's a desktop device */}
             {isDesktop && (
                 <AnimatePresence>
                     {tooltipData && (
@@ -145,22 +201,24 @@ const GrammyBubbles = () => {
                                 borderRadius: "8px",
                                 border: "1px solid rgba(0, 0, 0, 0.1)",
                                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                                transform: "translate(-50%, -50%)", 
+                                transform: "translate(-50%, -50%)",
                             }}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.2 }}
                         >
                             <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
                             <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average} %</div>
                             <div className="font-mono text-[12px]">Predição: {tooltipData.prediction} %</div>
                             <div className="font-mono text-[12px]">Mercado: {tooltipData.market} %</div>
                             <div className="font-mono text-[12px]">Críticos: {tooltipData.critics} %</div>
+                            <div className="font-mono text-[10px] text-gray-600 mt-2 max-w-52">Clique para mais detalhes</div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             )}
+
             <div className="flex flex-col min-h-screen">
                 <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto">
                     {categories.map(cat => (
@@ -175,7 +233,7 @@ const GrammyBubbles = () => {
                     ))}
                 </div>
             </div>
-
+            <Legend />
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                 <DrawerContent className="text-[#efb9f0]">
                     <DrawerHeader>
@@ -187,10 +245,10 @@ const GrammyBubbles = () => {
                         <DrawerDescription>{selectedData?.comment_pitchfork}</DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4 ">
-                        <div className="font-bold font-mono text-[12px]">Média Geral: {selectedData?.overall_average} %</div>
+                        <div className="font-bold font-mono text-[12px] text-[#e2ff8e]">Média Geral: {selectedData?.overall_average} %</div>
                         <div className="font-mono text-[12px]">Predição: {selectedData?.prediction} %</div>
-                        <div className="font-mono text-[12px]">Mercado: {selectedData?.market} %</div>
-                        <div className="font-mono text-[12px]">Críticos: {selectedData?.critics} %</div>
+                        <div className="font-mono text-[12px] text-[#ffaab9]">Mercado: {selectedData?.market} %</div>
+                        <div className="font-mono text-[12px] text-[#d03200]">Críticos: {selectedData?.critics} %</div>
                     </div>
                 </DrawerContent>
             </Drawer>
