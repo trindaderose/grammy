@@ -47,8 +47,8 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
             .append("image")
             .attr("class", "bubble")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 100)) // Ajuste para celular
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 5 : 6), 100)) // Ajuste para celular
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100)) // Ajuste para celular
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100)) // Ajuste para celular
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
                 gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
@@ -145,7 +145,7 @@ const GrammyBubbles = () => {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 1 }}
+                            transition={{ duration: 0.5 }}
                         >
                             <div className="font-bold font-mono text-lg">{tooltipData.name}</div>
                             <div className="font-bold font-mono text-[12px]">Média Geral: {tooltipData.overall_average} %</div>
@@ -172,7 +172,10 @@ const GrammyBubbles = () => {
                 <DrawerContent>
                     <DrawerHeader>
                         <DrawerTitle>{selectedData?.name}</DrawerTitle>
-                        <DrawerDescription>Detailed Information</DrawerDescription>
+                        <DrawerDescription>{selectedData?.comment_billboard}</DrawerDescription>
+                        <DrawerDescription>{selectedData?.comment_apnews}</DrawerDescription>
+                        <DrawerDescription>{selectedData?.comment_theguardian}</DrawerDescription>
+                        <DrawerDescription>{selectedData?.comment_vulture}</DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4">
                         <div className="font-bold font-mono text-lg">{selectedData?.name}</div>
