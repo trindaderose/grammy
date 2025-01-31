@@ -176,6 +176,7 @@ const GrammyBubbles = () => {
                         <DrawerDescription>{selectedData?.comment_apnews}</DrawerDescription>
                         <DrawerDescription>{selectedData?.comment_theguardian}</DrawerDescription>
                         <DrawerDescription>{selectedData?.comment_vulture}</DrawerDescription>
+                        <DrawerDescription>{selectedData?.comment_pitchfork}</DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4">
                         <div className="font-bold font-mono text-lg">{selectedData?.name}</div>
