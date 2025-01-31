@@ -14,10 +14,10 @@ export interface PredictionNode extends d3.SimulationNodeDatum {
 }
 
 export const categories = [
-    { title: "Álbum do Ano", key: "album" },
-    { title: "Canção do Ano", key: "song" },
-    { title: "Gravação do Ano", key: "record" },
-    { title: "Artista Revelação", key: "new_artist" }
+    { title: "Álbum do Ano", key: "album", description: "Reconhecimento ao melhor álbum do ano. Ao longo dos anos, os critérios para quem recebe o prêmio evoluíram: inicialmente, apenas o artista principal era premiado; posteriormente, produtores, engenheiros de som e outros profissionais envolvidos na criação do álbum também passaram a ser reconhecidos." },
+    { title: "Canção do Ano", key: "song", description: "Esse prêmio reconhece a excelência na composição musical, destacando os autores da letra e melodia. Aqui, a arte de escrever uma canção é o que mais importa, e por isso, apenas os compositores levam o troféu para casa." },
+    { title: "Gravação do Ano", key: "record", description: "Enquanto a Canção do Ano premia a composição, a Gravação do Ano celebra todo o processo de produção de uma música. O prêmio vai para um time inteiro: o artista que interpretou a canção, além dos profissionais que fizeram a mágica acontecer nos bastidores, como produtores, engenheiros de som e especialistas em mixagem. É um reconhecimento à qualidade sonora e à experiência auditiva que a música proporciona."  },
+    { title: "Artista Revelação", key: "new_artist", description: "Destinado a novos talentos que se destacaram e conquistaram o público com suas músicas, seja através de um single ou álbum lançado no ano anterior. A Academia esclarece que a categoria reconhece estrelas em ascensão que estão moldando o futuro da música através de sua própria arte, independentemente de terem apenas alguns singles ou vários álbuns em seu currículo.				" }
 ];
 
 export const data: { [key: string]: PredictionNode[] } = {
@@ -92,7 +92,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_apnews: "",
             comment_theguardian: "",
             comment_vulture: "",
-            comment_pitchfork: "“Birds of a Feather” de Billie Eilish, que foi um grande sucesso comercial, provavelmente levará o prêmio. "
+            comment_pitchfork: "“Birds of a Feather” de Billie Eilish, que foi um grande sucesso comercial, provavelmente levará o prêmio."
         },
         {
             name: "Not Like Us (Kendrick Lamar)",

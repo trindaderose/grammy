@@ -13,13 +13,14 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } f
 interface BubbleChartProps {
     category: PredictionNode[];
     title: string;
+    description: string;
     onMouseEnter: (data: PredictionNode) => void;
     onMouseLeave: () => void;
     onMouseMove: (event: React.MouseEvent | MouseEvent) => void;
     onClick: (data: PredictionNode) => void;
 }
 
-const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove, onClick }: BubbleChartProps) => {
+const BubbleChart = ({ category, title, description, onMouseEnter, onMouseLeave, onMouseMove, onClick }: BubbleChartProps) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const simulationRef = useRef<d3.Simulation<PredictionNode, undefined> | null>(null);
 
@@ -72,8 +73,9 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
 
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h3 className="text-sm font-bold font-mono p-4 text-[#e0d1e8]">{title}</h3>
-            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden" style={{ zIndex: 1 }}></svg>
+            <h3 className="text-sm font-bold font-mono px-7 pb-2 text-[#fff6df]">{title}</h3>
+            <div className="text-[12px] max-w-3xl font-mono px-7 text-[#fff6df]">{description}</div>
+            <svg ref={svgRef} className="font-mono absolute w-full h-screen overflow-hidden" style={{ zIndex: 1 }}></svg>
         </motion.div>
     );
 };
@@ -108,7 +110,8 @@ const FloatingHint = () => {
 const Legend = () => {
     return (
         <div className="p-4 bg-[#1e0a2a] rounded-lg shadow-md m-5">
-            <h4 className="font-bold font-mono text-sm text-[#e0d1e8] mb-4">Legenda</h4>
+            <h4 className="font-bold font-mono text-sm text-[#e0d1e8] mb-2">Legenda</h4>
+            <div className="text-[12px] text-white/50 mb-4">Clique na imagem do artista para mais detalhes.</div>
             <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 bg-[#e2ff8e] rounded-full"></div>
@@ -186,7 +189,7 @@ const GrammyBubbles = () => {
                 onMouseLeave={handleMouseLeave}
                 onMouseMove={handleMouseMove}
                 onClick={handleClick}
-            />
+                description={categories.find(cat => cat.key === selectedCategory)?.description || ""} />
             {isDesktop && (
                 <AnimatePresence>
                     {tooltipData && (
@@ -218,19 +221,19 @@ const GrammyBubbles = () => {
                 </AnimatePresence>
             )}
 
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col h-screen">
                 <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto" style={{ zIndex: 2 }}>
-    {categories.map(cat => (
-        <Button
-            variant="default"
-            key={cat.key}
-            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
-            onClick={() => setSelectedCategory(cat.key)}
-        >
-            {cat.title}
-        </Button>
-    ))}
-</div>
+                    {categories.map(cat => (
+                        <Button
+                            variant="default"
+                            key={cat.key}
+                            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
+                            onClick={() => setSelectedCategory(cat.key)}
+                        >
+                            {cat.title}
+                        </Button>
+                    ))}
+                </div>
             </div>
             <Legend />
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
