@@ -48,8 +48,8 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
             .append("image")
             .attr("class", "bubble cursor-pointer")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100))
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 100))
+            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 150))
+            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 150))
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
                 gsap.to(event.currentTarget, { scale: 1, opacity: 1, duration: 0.3 });
@@ -62,7 +62,7 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
             .on("mousemove", (event) => onMouseMove(event))
             .on("click", (event, d) => onClick(d));
 
-        gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 0.8, stagger: 0.05 });
+        gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 2, stagger: 0.05 });
 
         function ticked() {
             bubbles.attr("x", d => (d.x ?? 0) - Math.max(d.overall_average * 3, 20))
@@ -73,7 +73,7 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <h3 className="text-sm font-bold font-mono p-4 text-[#e0d1e8]">{title}</h3>
-            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden"></svg>
+            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden" style={{ zIndex: 1 }}></svg>
         </motion.div>
     );
 };
@@ -179,7 +179,6 @@ const GrammyBubbles = () => {
 
     return (
         <motion.div className="flex flex-col h-full w-full bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {/* <FloatingHint /> */}
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
@@ -220,18 +219,18 @@ const GrammyBubbles = () => {
             )}
 
             <div className="flex flex-col min-h-screen">
-                <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto">
-                    {categories.map(cat => (
-                        <Button
-                            variant="default"
-                            key={cat.key}
-                            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
-                            onClick={() => setSelectedCategory(cat.key)}
-                        >
-                            {cat.title}
-                        </Button>
-                    ))}
-                </div>
+                <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto" style={{ zIndex: 2 }}>
+    {categories.map(cat => (
+        <Button
+            variant="default"
+            key={cat.key}
+            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
+            onClick={() => setSelectedCategory(cat.key)}
+        >
+            {cat.title}
+        </Button>
+    ))}
+</div>
             </div>
             <Legend />
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

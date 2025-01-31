@@ -5,7 +5,7 @@ import { Button } from "../components/ui/button";
 
 interface ResearchSectionProps {
     title: string;
-    content: string;
+    content: string[]; // Change to an array of strings
     link?: string;
     asideImage?: string;
     asideText?: string;
@@ -16,7 +16,11 @@ const ResearchSection = ({ title, content, link, asideImage, asideText, tableDat
     return (
         <motion.div className="my-8 bg-[#150317]">
             <h2 className="text-5xl font-bold text-[#efb9f0] mb-4 pt-10 max-w-screen-md">{title}</h2>
-            <p className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4">{content}</p>
+            <div className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4">
+                {content.map((paragraph, index) => (
+                    <p key={index} className="mb-4">{paragraph}</p>
+                ))}
+            </div>
 
             {link && (
                 <a href={link} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
@@ -62,9 +66,10 @@ const GrammyResearch = () => {
         <motion.div className="h-full p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ResearchSection
                 title="Quais são as previsões para o Grammy Awards 2025?"
-                content="A 67ª edição do Grammy Awards será no domingo, 2 de fevereiro, e nós fomos atrás das apostas para as quatro categorias mais cobiçadas da noite – ou, para os íntimos, o Big Four: Gravação do Ano, Álbum do Ano, Canção do Ano e Artista Revelação. 
-                
-                Para esta análise, combinamos três frentes de previsão: os dados da Action Network, conhecida por suas análises detalhadas; a Kalshi, uma bolsa de valores que reflete a percepção do mercado por meio da negociação de contratos baseados em eventos reais; e as projeções de veículos influentes como Billboard, The Guardian, Vulture, AP News e Pitchfork. Nos Estados Unidos, apostar em premiações como o Grammy é algo comum nas famosas BETs, onde tudo gira em torno das probabilidades (odds). Os apostadores podem jogar no seguro e escolher os favoritos ou arriscar nos outsiders – e quanto maior o risco, maior o prêmio."
+                content={[
+                    "A 67ª edição do Grammy Awards será no domingo, 2 de fevereiro, e nós fomos atrás das apostas para as quatro categorias mais cobiçadas da noite – ou, para os íntimos, o Big Four: Gravação do Ano, Álbum do Ano, Canção do Ano e Artista Revelação.",
+                    "Para esta análise, combinamos três frentes de previsão: os dados da Action Network, conhecida por suas análises detalhadas; a Kalshi, uma bolsa de valores que reflete a percepção do mercado por meio da negociação de contratos baseados em eventos reais; e as projeções de veículos influentes como Billboard, The Guardian, Vulture, AP News e Pitchfork. Nos Estados Unidos, apostar em premiações como o Grammy é algo comum nas famosas BETs, onde tudo gira em torno das probabilidades (odds). Os apostadores podem jogar no seguro e escolher os favoritos ou arriscar nos outsiders – e quanto maior o risco, maior o prêmio."
+                ]}
             />
         </motion.div>
     );
