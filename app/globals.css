@@ -3,10 +3,10 @@
 @tailwind utilities;
   
 :root {
-  --main: #88aaee;
+  --main: #efb9f0;
   --overlay: rgba(0, 0, 0, 0.8); /* background color overlay for alert dialogs, modals, etc. */
 
-  --bg: #dfe5f2;
+  --bg: #150317;
   --bw: #fff; /* white and secondary black e.g. utility class variant would be: bg-[#fff] dark:bg-[#212121] */
   --blank: #000; /* blank black and white */
   --border: #000;

@@ -72,8 +72,7 @@ const BubbleChart = ({ category, title, onMouseEnter, onMouseLeave, onMouseMove,
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <h3 className="text-sm font-bold font-mono p-4 text-white">{title}</h3>
-            <svg ref={svgRef} className="font-mono absolute top-0 left-0"></svg>
-        </motion.div>
+            <svg ref={svgRef} className="font-mono absolute top-0 left-0 w-full h-screen overflow-hidden"></svg>        </motion.div>
     );
 };
 
@@ -109,7 +108,12 @@ const GrammyBubbles = () => {
     const handleMouseLeave = () => setTooltipData(null);
     const handleMouseMove = (event: React.MouseEvent | MouseEvent) => {
         if (event instanceof MouseEvent) {
-            setTooltipPosition({ x: event.clientX + 10, y: event.clientY + 10 });
+            const target = event.currentTarget as HTMLElement;
+            const rect = target.getBoundingClientRect();
+            setTooltipPosition({
+                x: rect.left + window.scrollX + rect.width / 2,
+                y: rect.top + window.scrollY + rect.height / 2
+            });
         }
     };
     const handleClick = (data: PredictionNode) => {
@@ -118,7 +122,7 @@ const GrammyBubbles = () => {
     };
 
     return (
-        <motion.div className="flex flex-col h-full bg-black" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="flex flex-col h-full w-full bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
@@ -132,7 +136,7 @@ const GrammyBubbles = () => {
                 <AnimatePresence>
                     {tooltipData && (
                         <motion.div
-                            className="absolute z-20"
+                            className="absolute z-20 tooltip"
                             style={{
                                 left: tooltipPosition.x,
                                 top: tooltipPosition.y,
@@ -141,6 +145,7 @@ const GrammyBubbles = () => {
                                 borderRadius: "8px",
                                 border: "1px solid rgba(0, 0, 0, 0.1)",
                                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                transform: "translate(-50%, -50%)", // Center the tooltip
                             }}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -156,20 +161,23 @@ const GrammyBubbles = () => {
                     )}
                 </AnimatePresence>
             )}
-            <div className="flex space-x-4 p-4 fixed bottom-0 left-0 right-0 z-10 items-center justify-center flex-wrap">
-                {categories.map(cat => (
-                    <Button
-                        variant={"neutral"}
-                        key={cat.key}
-                        className="text-[12px] font-mono px-4 py-2 m-1 rounded"
-                        onClick={() => setSelectedCategory(cat.key)}
-                    >
-                        {cat.title}
-                    </Button>
-                ))}
+            <div className="flex flex-col min-h-screen">
+                <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto">
+                    {categories.map(cat => (
+                        <Button
+                            variant="default"
+                            key={cat.key}
+                            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
+                            onClick={() => setSelectedCategory(cat.key)}
+                        >
+                            {cat.title}
+                        </Button>
+                    ))}
+                </div>
             </div>
+
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                <DrawerContent>
+                <DrawerContent className="text-[#efb9f0]">
                     <DrawerHeader>
                         <DrawerTitle>{selectedData?.name}</DrawerTitle>
                         <DrawerDescription>{selectedData?.comment_billboard}</DrawerDescription>
@@ -178,8 +186,7 @@ const GrammyBubbles = () => {
                         <DrawerDescription>{selectedData?.comment_vulture}</DrawerDescription>
                         <DrawerDescription>{selectedData?.comment_pitchfork}</DrawerDescription>
                     </DrawerHeader>
-                    <div className="p-4">
-                        <div className="font-bold font-mono text-lg">{selectedData?.name}</div>
+                    <div className="p-4 ">
                         <div className="font-bold font-mono text-[12px]">Média Geral: {selectedData?.overall_average} %</div>
                         <div className="font-mono text-[12px]">Predição: {selectedData?.prediction} %</div>
                         <div className="font-mono text-[12px]">Mercado: {selectedData?.market} %</div>

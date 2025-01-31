@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import GrammyBubbles from "@/components/GrammyBubbles";
 import GrammyResearch from "@/components/Research";
 
 export default function Home() {
   return (
     <div className="">
-      {/* <GrammyResearch /> */}
+      <GrammyResearch />
       <GrammyBubbles />
     </div>
   );

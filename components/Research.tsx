@@ -14,9 +14,9 @@ interface ResearchSectionProps {
 
 const ResearchSection = ({ title, content, link, asideImage, asideText, tableData }: ResearchSectionProps) => {
     return (
-        <motion.div className="my-8">
-            <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
-            <p className="text-sm text-gray-300 mb-4">{content}</p>
+        <motion.div className="my-8 bg-[#150317]">
+            <h2 className="text-5xl font-bold text-white mb-4 pt-10 max-w-screen-md">{title}</h2>
+            <p className="text-sm text-gray-300 max-w-screen-sm mb-4">{content}</p>
 
             {link && (
                 <a href={link} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
@@ -59,30 +59,10 @@ const ResearchSection = ({ title, content, link, asideImage, asideText, tableDat
 
 const GrammyResearch = () => {
     return (
-        <motion.div className=" p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="h-full p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ResearchSection
                 title="Quais são as previsões para o Grammy Awards 2025?"
-                content="A 67ª edição do Grammy está chegando, e nós fomos atrás das apostas para as quatro categorias mais cobiçadas da noite – ou, para os íntimos, o Big Four: Gravação do Ano, Álbum do Ano, Canção do Ano e Artista Revelação. Nos Estados Unidos, é comum apostar no Grammy por meio das famosas BETs, onde tudo gira em torno das probabilidades (*odds*). Os apostadores podem jogar no seguro e escolher os favoritos ou arriscar nos outsiders – e quanto maior o risco, maior o prêmio. Para esta análise, mergulhamos nos números de sites especializados nessas apostas e cruzamos com previsões da *Billboard, The Guardian, Vulture, AP News* e, claro, aquela que tem a língua igual um chicote: Pitchfork."
-            />
-
-            <ResearchSection
-                title="Dados Quantitativos"
-                content="As previsões para o Grammy são baseadas em análises detalhadas de diversas fontes, incluindo a Action Network e Kalshi, plataformas de previsão de eventos."
-                asideImage="/icons/robot_lightgray.svg"
-                asideText="Conteúdo feito com apoio de IA."
-            />
-
-            <ResearchSection
-                title="2025 Grammy Odds"
-                content="Aqui estão as odds para algumas das principais categorias do Grammy 2025."
-                tableData={[
-                    { "Nominee": "Brat (Charli XCX)", "Odds": "+150", "Implied Prob.": "40%" },
-                    { "Nominee": "Cowboy Carter (Beyoncé)", "Odds": "+240", "Implied Prob.": "29.41%" },
-                    { "Nominee": "Hit Me Hard and Soft (Billie Eilish)", "Odds": "+300", "Implied Prob.": "25%" },
-                    { "Nominee": "The Rise and Fall of a Midwest Princess (Chappell Roan)", "Odds": "+750", "Implied Prob.": "11.76%" },
-                    { "Nominee": "The Tortured Poets Department (Taylor Swift)", "Odds": "+1200", "Implied Prob.": "7.69%" },
-                    { "Nominee": "Short n' Sweet (Sabrina Carpenter)", "Odds": "+2600", "Implied Prob.": "3.7%" }
-                ]}
+                content="A 67ª edição do Grammy Awards será no domingo, 2 de fevereiro, e nós fomos atrás das apostas para as quatro categorias mais cobiçadas da noite – ou, para os íntimos, o Big Four: Gravação do Ano, Álbum do Ano, Canção do Ano e Artista Revelação. Para esta análise, combinamos três frentes de previsão: os dados da Action Network, conhecida por suas análises detalhadas; a Kalshi, uma bolsa de valores que reflete a percepção do mercado por meio da negociação de contratos baseados em eventos reais; e as projeções de veículos influentes como Billboard, The Guardian, Vulture, AP News e Pitchfork. Nos Estados Unidos, apostar em premiações como o Grammy é algo comum nas famosas BETs, onde tudo gira em torno das probabilidades (odds). Os apostadores podem jogar no seguro e escolher os favoritos ou arriscar nos outsiders – e quanto maior o risco, maior o prêmio."
             />
         </motion.div>
     );
