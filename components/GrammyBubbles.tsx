@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { categories, data, PredictionNode } from "../data/data";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import Legend from "./Legend";
 
 interface BubbleChartProps {
     category: PredictionNode[];
@@ -20,7 +21,29 @@ interface BubbleChartProps {
     onClick: (data: PredictionNode) => void;
 }
 
-const BubbleChart = ({ category, title, description, onMouseEnter, onMouseLeave, onMouseMove, onClick }: BubbleChartProps) => {
+interface BubbleChartProps {
+    category: PredictionNode[];
+    title: string;
+    description: string;
+    onMouseEnter: (data: PredictionNode) => void;
+    onMouseLeave: () => void;
+    onMouseMove: (event: React.MouseEvent | MouseEvent) => void;
+    onClick: (data: PredictionNode) => void;
+    selectedCategory: string; // Add selectedCategory as a prop
+    onCategoryChange: (category: string) => void; // Add onCategoryChange as a prop
+}
+
+const BubbleChart = ({
+    category,
+    title,
+    description,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseMove,
+    onClick,
+    selectedCategory, // Receive selectedCategory as a prop
+    onCategoryChange, // Receive onCategoryChange as a prop
+}: BubbleChartProps) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const simulationRef = useRef<d3.Simulation<PredictionNode, undefined> | null>(null);
 
@@ -36,11 +59,17 @@ const BubbleChart = ({ category, title, description, onMouseEnter, onMouseLeave,
 
         const nodes = category.map(d => ({ ...d }));
 
+        // Adjust bubble size and collision radius based on screen width
+        const isMobile = window.innerWidth < 768;
+        const bubbleSizeMultiplier = isMobile ? 7 : 8; // Smaller on mobile, larger on desktop
+        const minBubbleSize = isMobile ? 100 : 150; // Minimum size for bubbles
+        const collisionRadiusMultiplier = isMobile ? 2 : 3; // Adjust collision radius for mobile
+
         simulationRef.current?.stop();
         simulationRef.current = d3.forceSimulation(nodes)
-            .force("charge", d3.forceManyBody().strength(10))
+            .force("charge", d3.forceManyBody().strength(5)) // Adjust strength as needed
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * 2))
+            .force("collision", d3.forceCollide<PredictionNode>().radius(d => d.overall_average * collisionRadiusMultiplier))
             .on("tick", ticked);
 
         const bubbles = svg.selectAll(".bubble")
@@ -48,12 +77,13 @@ const BubbleChart = ({ category, title, description, onMouseEnter, onMouseLeave,
             .enter()
             .append("image")
             .attr("class", "bubble cursor-pointer")
+            .attr("r", "100")
             .attr("href", d => d.src_img.replace("../public", ""))
-            .attr("width", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 150))
-            .attr("height", d => Math.max(d.overall_average * (window.innerWidth < 768 ? 6 : 6), 150))
+            .attr("width", d => Math.max(d.overall_average * bubbleSizeMultiplier, minBubbleSize)) // Responsive size
+            .attr("height", d => Math.max(d.overall_average * bubbleSizeMultiplier, minBubbleSize)) // Responsive size
             .style("opacity", 0)
             .on("mouseover", (event, d) => {
-                gsap.to(event.currentTarget, { scale: 1, opacity: 1, duration: 0.3 });
+                gsap.to(event.currentTarget, { scale: 1, opacity: 0.8, duration: 0.3 });
                 onMouseEnter(d);
             })
             .on("mouseleave", (event) => {
@@ -66,16 +96,35 @@ const BubbleChart = ({ category, title, description, onMouseEnter, onMouseLeave,
         gsap.to(bubbles.nodes(), { opacity: 1, scale: 1, duration: 2, stagger: 0.05 });
 
         function ticked() {
-            bubbles.attr("x", d => (d.x ?? 0) - Math.max(d.overall_average * 3, 20))
-                .attr("y", d => (d.y ?? 0) - Math.max(d.overall_average * 3, 20));
+            bubbles.attr("x", d => (d.x ?? 0) - Math.max(d.overall_average * bubbleSizeMultiplier / 2, minBubbleSize / 2))
+                .attr("y", d => (d.y ?? 0) - Math.max(d.overall_average * bubbleSizeMultiplier / 2, minBubbleSize / 2));
         }
     }, [category]);
 
     return (
         <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h3 className="text-sm font-bold font-mono px-7 pb-2 text-[#fff6df]">{title}</h3>
-            <div className="text-[12px] max-w-3xl font-mono px-7 text-[#fff6df]">{description}</div>
-            <svg ref={svgRef} className="font-mono absolute w-full h-screen overflow-hidden" style={{ zIndex: 1 }}></svg>
+            <div className="flex flex-col items-start px-4">
+                <h3 className="text-sm font-bold font-mono px-4 text-[#efb9f0]">{title}</h3>
+                <div className="flex flex-wrap items-left justify-start mt-auto px-2" style={{ zIndex: 2 }}>
+                    {categories.map(cat => (
+                        <Button
+                            variant="default"
+                            key={cat.key}
+                            className="text-[12px] font-mono m-1 rounded"
+                            onClick={() => onCategoryChange(cat.key)} // Use onCategoryChange prop
+                        >
+                            {cat.title}
+                        </Button>
+                    ))}
+                </div>
+                <div className="text-[12px] max-w-3xl font-mono text-[#fff6df] pt-5 px-4">{description}
+                </div>
+                    <div><Legend />
+                    </div>
+            </div>
+            <div className="font-mono absolute w-full h-screen justify-center items-center overflow-hidden">
+                <svg ref={svgRef} style={{ zIndex: 1 }}></svg>
+            </div>
         </motion.div>
     );
 };
@@ -107,40 +156,7 @@ const FloatingHint = () => {
     );
 };
 
-const Legend = () => {
-    return (
-        <div className="p-4 bg-[#1e0a2a] rounded-lg shadow-md m-5">
-            <h4 className="font-bold font-mono text-sm text-[#e0d1e8] mb-2">Legenda</h4>
-            <div className="text-[12px] text-white/50 mb-4">Clique na imagem do artista para mais detalhes.</div>
-            <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[#e2ff8e] rounded-full"></div>
-                    <p className="text-[12px] text-[#e0d1e8]">
-                        <strong>Média Geral:</strong> Calculada a partir de três fontes principais: Análise Preditiva, Apostas do Público e Apostas da Crítica.
-                    </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[#ffffff] rounded-full"></div>
-                    <p className="text-[12px] text-[#e0d1e8]">
-                        <strong>Análise Preditiva:</strong> Usa modelos estatísticos e tendências históricas para prever vencedores do Grammy Awards.
-                    </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[#ffaab9] rounded-full"></div>
-                    <p className="text-[12px] text-[#e0d1e8]">
-                        <strong>Apostas do Mercado:</strong> Coletadas via Kalshi. Os preços dos contratos refletem a percepção coletiva sobre os favoritos. Dados coletados em 29/01.
-                    </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[#d03200] rounded-full"></div>
-                    <p className="text-[12px] text-[#e0d1e8]">
-                        <strong>Apostas da Crítica:</strong> Baseadas na análise de Billboard, The Guardian, Vulture, AP News e Pitchfork, com pesos atribuídos por especialização, influência, profundidade e popularidade.
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-};
+
 
 const GrammyBubbles = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("album");
@@ -164,7 +180,9 @@ const GrammyBubbles = () => {
             setTooltipData(data);
         }
     };
+
     const handleMouseLeave = () => setTooltipData(null);
+
     const handleMouseMove = (event: React.MouseEvent | MouseEvent) => {
         if (event instanceof MouseEvent) {
             const target = event.currentTarget as HTMLElement;
@@ -175,21 +193,25 @@ const GrammyBubbles = () => {
             });
         }
     };
+
     const handleClick = (data: PredictionNode) => {
         setSelectedData(data);
         setIsDrawerOpen(true);
     };
 
     return (
-        <motion.div className="flex flex-col h-full w-full bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="flex flex-col h-full w-full px-4 bg-[#150317]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <BubbleChart
                 category={data[selectedCategory]}
                 title={categories.find(cat => cat.key === selectedCategory)?.title || ""}
+                description={categories.find(cat => cat.key === selectedCategory)?.description || ""}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onMouseMove={handleMouseMove}
                 onClick={handleClick}
-                description={categories.find(cat => cat.key === selectedCategory)?.description || ""} />
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+            />
             {isDesktop && (
                 <AnimatePresence>
                     {tooltipData && (
@@ -221,23 +243,9 @@ const GrammyBubbles = () => {
                 </AnimatePresence>
             )}
 
-            <div className="flex flex-col h-screen">
-                <div className="flex flex-wrap space-x-4 p-4 items-center justify-center mt-auto" style={{ zIndex: 2 }}>
-                    {categories.map(cat => (
-                        <Button
-                            variant="default"
-                            key={cat.key}
-                            className="text-[12px] font-mono px-4 py-2 m-1 rounded"
-                            onClick={() => setSelectedCategory(cat.key)}
-                        >
-                            {cat.title}
-                        </Button>
-                    ))}
-                </div>
-            </div>
-            <Legend />
+            {/* Drawer */}
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                <DrawerContent className="text-[#efb9f0]">
+                <DrawerContent className="text-[#efb9f0] px-4">
                     <DrawerHeader>
                         <DrawerTitle>{selectedData?.name}</DrawerTitle>
                         <DrawerDescription>{selectedData?.comment_billboard}</DrawerDescription>

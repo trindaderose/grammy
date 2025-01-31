@@ -15,8 +15,8 @@ interface ResearchSectionProps {
 const ResearchSection = ({ title, content, link, asideImage, asideText, tableData }: ResearchSectionProps) => {
     return (
         <motion.div className="my-8 bg-[#150317]">
-            <h2 className="text-5xl font-bold text-[#efb9f0] mb-4 pt-10 max-w-screen-md">{title}</h2>
-            <div className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4">
+            <h2 className="text-4xl lg:text-5xl font-bold text-[#efb9f0] mb-4 px-4 pt-10 max-w-screen-md">{title}</h2>
+            <div className="text-sm text-[#e0d1e8] max-w-screen-sm mb-4 px-4">
                 {content.map((paragraph, index) => (
                     <p key={index} className="mb-4">{paragraph}</p>
                 ))}
@@ -71,6 +71,7 @@ const GrammyResearch = () => {
                     "Para esta análise, combinamos três frentes de previsão: os dados da Action Network, conhecida por suas análises detalhadas; a Kalshi, uma bolsa de valores que reflete a percepção do mercado por meio da negociação de contratos baseados em eventos reais; e as projeções de veículos influentes como Billboard, The Guardian, Vulture, AP News e Pitchfork. Nos Estados Unidos, apostar em premiações como o Grammy é algo comum nas famosas BETs, onde tudo gira em torno das probabilidades (odds). Os apostadores podem jogar no seguro e escolher os favoritos ou arriscar nos outsiders – e quanto maior o risco, maior o prêmio."
                 ]}
             />
+            
         </motion.div>
     );
 };
