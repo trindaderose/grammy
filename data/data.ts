@@ -33,7 +33,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_billboard: "",
             comment_apnews: "",
             comment_theguardian: "",
-            comment_vulture: "A aposta para a vitória é em Charli, mas Beyoncé ainda é uma forte concorrente.",
+            comment_vulture: "Vulture: A aposta para a vitória é em Charli, mas Beyoncé ainda é uma forte concorrente.",
             comment_pitchfork: ""
         },
         {
@@ -45,8 +45,8 @@ export const data: { [key: string]: PredictionNode[] } = {
             src_img: "../public/Cowboy Carter (Beyoncé).png",
             spotify: "https://open.spotify.com/intl-pt/album/6BzxX6zkDsYKFJ04ziU5xQ?si=o7koC9UrTIuudai0G8JCmA",
             comment_billboard: "",
-            comment_apnews: "Cowboy Carter de Beyoncé se destaca, apesar dos desafios nas estruturas tradicionais da música country.						",
-            comment_theguardian: "Beyoncé finalmente conquistará o Álbum do Ano com Cowboy Carter, após anos de derrotas consideradas injustas, e também levará Gravação do Ano com Texas Hold 'Em. ",
+            comment_apnews: "AP News: Cowboy Carter de Beyoncé se destaca, apesar dos desafios nas estruturas tradicionais da música country.						",
+            comment_theguardian: "The Guardian: Beyoncé finalmente conquistará o Álbum do Ano com Cowboy Carter, após anos de derrotas consideradas injustas, e também levará Gravação do Ano com Texas Hold 'Em. ",
             comment_vulture: "",
             comment_pitchfork: ""
         },
@@ -76,7 +76,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_apnews: "",
             comment_theguardian: "",
             comment_vulture: "",
-            comment_pitchfork: "A vitória de Taylor Swift parece ser iminente, dado seu domínio cultural durante a turnê “Eras” e sua habilidade de lançar versões do álbum constantemente, mantendo sua relevância."
+            comment_pitchfork: "Pitchfork: A vitória de Taylor Swift parece ser iminente, dado seu domínio cultural durante a turnê “Eras” e sua habilidade de lançar versões do álbum constantemente, mantendo sua relevância."
         }
     ],
     song: [
@@ -88,11 +88,11 @@ export const data: { [key: string]: PredictionNode[] } = {
             overall_average: 59.1,
             src_img: "../public/Billie.png",
             spotify: "https://open.spotify.com/intl-pt/track/6dOtVTDdiauQNBQEDOtlAB?si=6eb24f7352da43f8",
-            comment_billboard: "Birds of a feather, de Billie Eilish e FINNEAS, é apontada como favorita, no entanto, Die With a Smile (With Bruno Mars) também é mencionada como possível vencedora.",
+            comment_billboard: "Billboard: Birds of a feather, de Billie Eilish e FINNEAS, é apontada como favorita, no entanto, Die With a Smile (With Bruno Mars) também é mencionada como possível vencedora.",
             comment_apnews: "",
             comment_theguardian: "",
             comment_vulture: "",
-            comment_pitchfork: "“Birds of a Feather” de Billie Eilish, que foi um grande sucesso comercial, provavelmente levará o prêmio."
+            comment_pitchfork: "“Pitchfork: Birds of a Feather” de Billie Eilish, que foi um grande sucesso comercial, provavelmente levará o prêmio."
         },
         {
             name: "Not Like Us (Kendrick Lamar)",
@@ -103,8 +103,8 @@ export const data: { [key: string]: PredictionNode[] } = {
             src_img: "../public/Kdot.png",
             spotify: "https://open.spotify.com/intl-pt/track/6AI3ezQ4o3HUoP6Dhudph3?si=aeb2e1309b89460e",
             comment_billboard: "",
-            comment_apnews: "A vitória de Kendrick Lamar com “Not Like Us” parece inevitável. Como único compositor da faixa, este pode ser o momento perfeito para sua primeira conquista na categoria.",
-            comment_theguardian: "Lamar, com Not Like Us, é apontado como favorito para Canção do Ano, dado seu impacto cultural e lirismo afiado.",
+            comment_apnews: "AP News: A vitória de Kendrick Lamar com “Not Like Us” parece inevitável. Como único compositor da faixa, este pode ser o momento perfeito para sua primeira conquista na categoria.",
+            comment_theguardian: "The Guardian: Lamar, com Not Like Us, é apontado como favorito para Canção do Ano, dado seu impacto cultural e lirismo afiado.",
             comment_vulture: "",
             comment_pitchfork: ""
         },
@@ -119,7 +119,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_billboard: "",
             comment_apnews: "",
             comment_theguardian: "",
-            comment_vulture: "A Song of the Year tende a premiar composições com uma mensagem significativa. “Good Luck, Babe!” de Chappell Roan, que explora temas de identidade queer, é uma das favoritas. ",
+            comment_vulture: "Vulture: A Song of the Year tende a premiar composições com uma mensagem significativa. “Good Luck, Babe!” de Chappell Roan, que explora temas de identidade queer, é uma das favoritas. ",
             comment_pitchfork: ""
         },
         {
@@ -188,10 +188,10 @@ export const data: { [key: string]: PredictionNode[] } = {
             overall_average: 14.8,
             src_img: "../public/Kdot.png",
             spotify: "https://open.spotify.com/intl-pt/track/6AI3ezQ4o3HUoP6Dhudph3?si=aeb2e1309b89460e",
-            comment_billboard: "A Billboard sugere que Not Like Us, de Kendrick Lamar, deve levar o prêmio, embora Now and Then, dos Beatles, também seja uma forte candidata.",
-            comment_apnews: "Not Like Us de Kendrick Lamar aparece como favorita, destacando a influência significativa desta última faixa.",
+            comment_billboard: "Billboard: A Billboard sugere que Not Like Us, de Kendrick Lamar, deve levar o prêmio, embora Now and Then, dos Beatles, também seja uma forte candidata.",
+            comment_apnews: "AP News: Not Like Us de Kendrick Lamar aparece como favorita, destacando a influência significativa desta última faixa.",
             comment_theguardian: "",
-            comment_vulture: "A tendência é que Not Like Us, de Lamar, se destaque por seu impacto cultural.",
+            comment_vulture: "Vulture: A tendência é que Not Like Us, de Lamar, se destaque por seu impacto cultural.",
             comment_pitchfork: ""
         },
         {
@@ -206,7 +206,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_apnews: "",
             comment_theguardian: "",
             comment_vulture: "",
-            comment_pitchfork: "Kendrick Lamar dominou 2024 com Not Like Us, uma faixa que se tornou um marco cultural, com produção impecável e versos impactantes. No entanto, a escolha do prêmio de Record of the Year tende a ser mais conservadora com The Beatles - “Now and Then”."
+            comment_pitchfork: "Pitchfork: Kendrick Lamar dominou 2024 com Not Like Us, uma faixa que se tornou um marco cultural, com produção impecável e versos impactantes. No entanto, a escolha do prêmio de Record of the Year tende a ser mais conservadora com The Beatles - “Now and Then”."
         },
         {
             name: "Texas Hold 'Em (Beyoncé)",
@@ -218,7 +218,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             spotify: "https://open.spotify.com/intl-pt/track/0Z7nGFVCLfixWctgePsRk9?si=44f87fea29a84bbd",
             comment_billboard: "",
             comment_apnews: "",
-            comment_theguardian: "Além de levar o Álbum do Ano com Cowboy Carter, também levará Gravação do Ano com Texas Hold 'Em. ",
+            comment_theguardian: "The Guardian: Além de levar o Álbum do Ano com Cowboy Carter, também levará Gravação do Ano com Texas Hold 'Em. ",
             comment_vulture: "",
             comment_pitchfork: ""
         },
@@ -236,7 +236,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_apnews: "",
             comment_theguardian: "",
             comment_vulture: "",
-            comment_pitchfork: "Com performances marcantes, um lugar na turnê de Olivia Rodrigo e shows lotados em festivais, Roan conquistou o mainstream. Seu estilo excêntrico e influências que mesclam Kate Bush e Katy Perry, combinadas com letras autênticas sobre desejo queer, fazem dela a escolha ideal para levar o prêmio."
+            comment_pitchfork: "Pitchfork: Com performances marcantes, um lugar na turnê de Olivia Rodrigo e shows lotados em festivais, Roan conquistou o mainstream. Seu estilo excêntrico e influências que mesclam Kate Bush e Katy Perry, combinadas com letras autênticas sobre desejo queer, fazem dela a escolha ideal para levar o prêmio."
         },
         {
             name: "Sabrina Carpenter",
@@ -247,7 +247,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             src_img: "../public/Sabrina.png",
             spotify: "https://open.spotify.com/intl-pt/artist/74KM79TiuVKeVCqs8QtB0B?si=79b4327622a94dac",
             comment_billboard: "",
-            comment_apnews: "Sabrina Carpenter é apontada como favorita, apesar de já ter uma carreira estabelecida.",
+            comment_apnews: "AP News: Sabrina Carpenter é apontada como favorita, apesar de já ter uma carreira estabelecida.",
             comment_theguardian: "",
             comment_vulture: "",
             comment_pitchfork: ""
@@ -277,7 +277,7 @@ export const data: { [key: string]: PredictionNode[] } = {
             comment_billboard: "",
             comment_apnews: "",
             comment_theguardian: "",
-            comment_vulture: "Doechii teve uma ascensão após a indicação, lembrando o caminho de Victoria Monét no ano passado. ",
+            comment_vulture: "Vulture: Doechii teve uma ascensão após a indicação, lembrando o caminho de Victoria Monét no ano passado. ",
             comment_pitchfork: ""
         },
     ]

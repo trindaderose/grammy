@@ -245,7 +245,7 @@ const GrammyBubbles = () => {
 
             {/* Drawer */}
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                <DrawerContent className="text-[#efb9f0] px-4">
+                <DrawerContent className="text-[#efb9f0] px-2 pb-20">
                     <DrawerHeader>
                         <DrawerTitle>{selectedData?.name}</DrawerTitle>
                         <DrawerDescription>{selectedData?.comment_billboard}</DrawerDescription>
